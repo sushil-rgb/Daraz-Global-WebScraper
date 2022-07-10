@@ -10,23 +10,22 @@ import concurrent.futures
 start_time = time.time()
 time_interval = 0.5
 
+# Split URL update:
 main_daraz_url = ""
 split_main_url = main_daraz_url.split("?")
 
-
-
 category_name = Scraper(main_daraz_url).product_category_name()
 
-
 last_page = Scraper(main_daraz_url).last_page()
+
 
 url_lists = []
 for index in range(1, last_page+1):
     daraz_url = f"?page={str(index)}&".join(split_main_url)
     url_lists.append(daraz_url)
 
-
 print(f'Total pages to scrape | {len(url_lists)} pages.')
+
 
 all_daraz_product_links = []
 all_product_names = []
