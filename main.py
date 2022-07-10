@@ -10,7 +10,7 @@ import concurrent.futures
 start_time = time.time()
 time_interval = 0.5
 
-# Split URL update:
+# Paste the url below and run the scraper:
 main_daraz_url = ""
 split_main_url = main_daraz_url.split("?")
 
