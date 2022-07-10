@@ -10,7 +10,10 @@ import concurrent.futures
 start_time = time.time()
 time_interval = 0.5
 
-main_daraz_url = "https://www.daraz.com.np/laptops/?spm=a2a0e.searchlistcategory.cate_5.4.1eec5884kIeql2"
+main_daraz_url = ""
+split_main_url = main_daraz_url.split("?")
+
+
 
 category_name = Scraper(main_daraz_url).product_category_name()
 
@@ -19,7 +22,7 @@ last_page = Scraper(main_daraz_url).last_page()
 
 url_lists = []
 for index in range(1, last_page+1):
-    daraz_url = f"https://www.daraz.com.np/laptops/?page={str(index)}&spm=a2a0e.searchlistcategory.cate_5.4.1eec5884kIeql2"
+    daraz_url = f"?page={str(index)}&".join(split_main_url)
     url_lists.append(daraz_url)
 
 

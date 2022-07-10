@@ -110,6 +110,7 @@ class Scraper:
         # WebDriverWait(driver, 10).until((EC.visibility_of_element_located((By.TAG_NAME, 'body')))).send_keys(Keys.END)
         last_page = WebDriverWait(driver, 10).until((EC.visibility_of_element_located((By.XPATH, '//*[@id="root"]/div/div[3]/div[1]/div/div[1]/div[3]/div/ul/li[8]')))).text.strip()
         
+        driver.quit()
         return int(last_page)
     
 
@@ -135,6 +136,8 @@ class Scraper:
         else:
             product_category_name = list_breadcumbs[-1].text.strip()
         
+        driver.quit()
+
         return product_category_name
 
 
@@ -158,5 +161,7 @@ class Scraper:
 
         for name in names:
             all_product_names.append(name.text.strip())
+        
+        driver.quit()
         
         return all_product_names
