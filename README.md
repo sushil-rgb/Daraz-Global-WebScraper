@@ -1,4 +1,4 @@
-# daraz_all_product_link_scraper
+# Daraz link scraper
 A web scraper that scrape all the product links and its name from Daraz Nepal
 
 # paste any link in the main_daraz_url variable that is assigned in main.py
