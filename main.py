@@ -28,12 +28,15 @@ print(f'Total pages to scrape | {len(url_lists)} pages.')
 
 all_daraz_product_links = []
 all_product_names = []
+
 for count in range(len(url_lists)+1):
     try:
         print(f"Scraping page number | {count+1}.....")
+
         daraz = Scraper(url_lists[count])
         all_daraz_product_links.extend(daraz.selenium_scraper())
         all_product_names.extend(daraz.product_names())
+
     except IndexError:
         break
 
