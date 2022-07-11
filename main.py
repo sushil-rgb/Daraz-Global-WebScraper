@@ -15,15 +15,12 @@ split_main_url = main_daraz_url.split("?")
 
 print(f"Scraping category name....")
 category_name = Scraper(main_daraz_url).product_category_name()
+print(f"Category | {category_name}")
 
 print("Scraping last page.....")
 # Paste the url below and run the scraper:
-main_daraz_url = ""
-split_main_url = main_daraz_url.split("?")
-
-category_name = Scraper(main_daraz_url).product_category_name()
-
 last_page = Scraper(main_daraz_url).last_page()
+print(f"Last page | {last_page}")
 
 
 url_lists = []
