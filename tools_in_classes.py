@@ -108,9 +108,13 @@ class Scraper:
         driver.get(self.url)
         
         # WebDriverWait(driver, 10).until((EC.visibility_of_element_located((By.TAG_NAME, 'body')))).send_keys(Keys.END)
-        last_page = WebDriverWait(driver, 10).until((EC.visibility_of_element_located((By.XPATH, '//*[@id="root"]/div/div[3]/div[1]/div/div[1]/div[3]/div/ul/li[8]')))).text.strip()
+        try:
+            last_page = WebDriverWait(driver, 10).until((EC.visibility_of_element_located((By.XPATH, '//*[@id="root"]/div/div[3]/div[1]/div/div[1]/div[3]/div/ul/li[8]')))).text.strip()
+        except TimeoutException:
+            last_page = WebDriverWait(driver, 10).until((EC.visibility_of_element_located((By.XPATH, '//*[@id="root"]/div/div[2]/div[1]/div/div[1]/div[3]/div/ul/li[8]')))).text.strip()
         
         driver.quit()
+        
         return int(last_page)
     
 
@@ -165,3 +169,29 @@ class Scraper:
         driver.quit()
         
         return all_product_names
+    
+
+    def product_price(self):
+        all_product_price = []
+
+        self.opt.add_experimental_option('detach', True)
+        self.opt.add_experimental_option('excludeSwitches', ['enable-logging'])
+
+        # opt.headless = selenium_bool
+        for arg in self.selenium_arguments:
+            self.opt.add_argument(arg)
+
+        driver = webdriver.Chrome(service=self.path, options=self.opt)
+
+        driver.maximize_window()
+        driver.get(self.url)
+        
+        prices = WebDriverWait(driver, 10).until((EC.visibility_of_all_elements_located((By.CLASS_NAME, 'price--NVB62'))))
+
+        for price in prices:
+            all_product_price.append(price.text.strip())
+        
+        driver.quit()
+        return all_product_price
+    
+    
