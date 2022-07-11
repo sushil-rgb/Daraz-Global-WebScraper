@@ -3,13 +3,13 @@ import pandas as pd
 import winsound
 import time
 import itertools
-import concurrent.futures
 
 
 # track the timer:
 start_time = time.time()
 time_interval = 1
 
+<<<<<<< HEAD
 main_daraz_url = "https://www.daraz.com.np/clothing-men-underwear/?spm=a2a0e.11779170.cate_3.6.287d2d2bqqSBhD"
 split_main_url = main_daraz_url.split("?")
 
@@ -17,6 +17,14 @@ print(f"Scraping category name....")
 category_name = Scraper(main_daraz_url).product_category_name()
 
 print("Scraping last page.....")
+=======
+# Paste the url below and run the scraper:
+main_daraz_url = ""
+split_main_url = main_daraz_url.split("?")
+
+category_name = Scraper(main_daraz_url).product_category_name()
+
+>>>>>>> abb1b534a042971601b020efd07c266b4eb48839
 last_page = Scraper(main_daraz_url).last_page()
 
 
@@ -27,8 +35,10 @@ for index in range(1, last_page+1):
 
 print(f'Total pages to scrape | {len(url_lists)} pages.')
 
+
 all_daraz_product_links = []
 all_product_names = []
+<<<<<<< HEAD
 all_product_prices = []
 for count in range(len(url_lists)+1):
     try:
@@ -38,6 +48,17 @@ for count in range(len(url_lists)+1):
         all_daraz_product_links.extend(daraz.selenium_scraper())
         all_product_names.extend(daraz.product_names())
         all_product_prices.extend(daraz.product_price())
+=======
+
+for count in range(len(url_lists)+1):
+    try:
+        print(f"Scraping page number | {count+1}.....")
+
+        daraz = Scraper(url_lists[count])
+        all_daraz_product_links.extend(daraz.selenium_scraper())
+        all_product_names.extend(daraz.product_names())
+
+>>>>>>> abb1b534a042971601b020efd07c266b4eb48839
     except IndexError:
         break
 
