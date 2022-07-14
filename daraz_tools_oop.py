@@ -1,4 +1,3 @@
-from email.mime import base
 from playwright.sync_api import sync_playwright
 import itertools
 
