@@ -33,10 +33,6 @@ all_daraz_product_names = FlattenedLists().flat([DarazScraper(url).all_product_n
 all_daraz_product_prices = FlattenedLists().flat([DarazScraper(url).all_product_prices() for url in list_of_urls])
 
 
-total_time = round(time.time()-start_time, 2)
-time_in_secs = round(total_time)
-time_in_mins = round(total_time/60)
-
 d = {
     "Names": all_daraz_product_names,
     "Prices": all_daraz_product_prices,
