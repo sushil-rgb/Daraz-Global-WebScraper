@@ -148,74 +148,78 @@ class DarazScraper:
     
 
 # Below class scrapes data from an individual product link available in Daraz Nepal:
-class DarazIndivLinkScraper: 
-    pass   
-    def __init__(self, website_url):
-       
+class DarazIndivLinkScraper:        
+    def __init__(self, website_url):       
         self.website_url = website_url
-
+        self.headers = get_user_agent()
     
     def product_name(self):       
         with sync_playwright() as p:
             self.browser = p.chromium.launch(headless=True, slow_mo=1*1000)
-            self.context = self.browser.new_context(user_agent=f"{get_user_agent}")
-            self.page = self.context.new_page()
-            self.page.goto(self.base_url,timeout=10000)
-            try:
-                name = self.page.query_selector("//span[@class='pdp-mod-product-badge-title']").inner_text().strip()
-                self.browser.close()
-                self.page.close()
-                self.context.close()
-                self.browser.close()
+            self.page = self.browser.new_page(user_agent=self.headers)
+            self.page.goto(self.website_url)
 
-                return name
+            try:
+                self.page.wait_for_url(self.website_url)
+                try:
+                    self.name_selector = "//span[@class='pdp-mod-product-badge-title']"
+                    self.page.wait_for_selector(self.name_selector, timeout=1*10000)
+
+                    self.name = self.page.query_selector(self.name_selector).inner_text().strip()
+                    self.browser.close()
+
+                    return self.name   
+                except None:
+                    self.name = "N/A"
+                    return self.name             
             except Exception as e:
-                print(f"Error in plawright script {self.page}")
-                self.page.close()
-                self.context.close()
+                print(f"Error in plawright script {self.page}")                
                 self.browser.close()
     
 
     def product_discount_price(self):
         with sync_playwright() as p:
             self.browser = p.chromium.launch(headless=True, slow_mo=1*1000)
-            self.context = self.browser.new_context(user_agent=f"{get_user_agent}")
-            self.page = self.context.new_page()
-            self.page.goto(self.base_url,timeout=1000)
+            self.page = self.browser.new_page(user_agent=self.headers)
+            self.page.goto(self.website_url)
 
             try:
-                price = self.page.query_selector("//span[@class=' pdp-price pdp-price_type_normal pdp-price_color_orange pdp-price_size_xl']").inner_text().strip()
-                self.browser.close()
-                print(f"Error in plawright script {self.page}")
-                self.page.close()
-                self.context.close()
-                self.browser.close()
-                return price
+                self.page.wait_for_url(self.website_url)
+                try:
+                    self.price_selector = "//span[@class=' pdp-price pdp-price_type_normal pdp-price_color_orange pdp-price_size_xl']"
+                    self.page.wait_for_selector(self.price_selector, timeout=1*10000)
+
+                    self.price = self.page.query_selector(self.price_selector).inner_text().strip()
+                    self.browser.close()
+
+                    return self.price
+                except None:
+                    self.price = "N./A"
             except Exception as e:
-                print(f"Error in plawright script {self.page}")
-                self.page.close()
-                self.context.close()
-                self.browser.close()
+                print(f"Error in plawright script {self.page}")                
+                self.browser.close()                
         
     
     def product_og_price(self):
         with sync_playwright() as p:
             self.browser = p.chromium.launch(headless=True, slow_mo=1*1000)
-            self.context = self.browser.new_context(user_agent=f"{get_user_agent}")
-            self.page = self.context.new_page()
-            self.page.goto(self.base_url,timeout=10000)
+            self.page = self.browser.new_page(user_agent=self.headers)
+            self.page.goto(self.website_url)
 
             try:
-                ogPrice = self.page.query_selector("//span[@class=' pdp-price pdp-price_type_deleted pdp-price_color_lightgray pdp-price_size_xs']").inner_text().strip()
-                self.browser.close()
-                self.page.close()
-                self.context.close()
-                self.browser.close()
-                return ogPrice
+                self.page.wait_for_url(self.website_url)
+                try:
+                    self.og_selector = "//span[@class=' pdp-price pdp-price_type_deleted pdp-price_color_lightgray pdp-price_size_xs']"
+                    self.page.wait_for_selector(self.og_selector)
+
+                    self.ogPrice = self.page.query_selector(self.og_selector).inner_text().strip()
+                    self.browser.close()
+
+                    return self.ogPrice
+                except None:
+                    self.ogPrice = "N/A"
             except Exception as e:
                 print(f"Error in plawright script {self.page}")
-                self.page.close()
-                self.context.close()
                 self.browser.close()
 
 
