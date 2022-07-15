@@ -6,20 +6,22 @@ import pandas as pd
 import os
 import shutil
 import sys
+import smtplib
+import asynchat
 
 
 start_time = time.time()
 
-product_url = "https://www.daraz.com.np/clothing-men-underwear/?spm=a2a0e.searchlistcategory.cate_3.6.13245cb03qS4BB"
+product_url = "https://www.daraz.com.np/auto-parts-spares/?spm=a2a0e.searchlistcategory.cate_12_5.4.d1654f4f5xaidm"
 
-total_pages = DarazScraper(product_url).number_of_pages()
+total_pages = 51
 list_of_urls = SplitDarazURL(product_url).split(total_pages)
 product_category = DarazScraper(product_url).category_name()
 
-print(f"Total pages | {total_pages}")
+# print(f"Total pages | {total_pages}")
 
 # Setting up the directory for downloaded databases:
-folder_name = product_category 
+folder_name = f"Daraz {product_category}" 
 parent_dir = f"{os.getcwd()}"
 path_dir = os.path.join(parent_dir, folder_name)
 
@@ -41,17 +43,20 @@ time_in_mins = round(total_time/60)
 d = {
     "Names": all_daraz_product_names,
     "Prices": all_daraz_product_prices,
-    "Links": all_daraz_product_links 
+    "Links": all_daraz_product_links
 }
 
 df = pd.DataFrame(d)
 
-df.to_json(f"Daraz {folder_name}//Daraz {product_category} database.json", indent=4)
-df.to_excel(f"Daraz {folder_name}//Daraz {product_category} database.xlsx", index=False)
+df.to_json(f"{os.getcwd()}//{folder_name}//Daraz {product_category} database.json", indent=4)
+df.to_excel(f"{os.getcwd()}//{folder_name}//{product_category} database.xlsx", index=False)
 
 print(f"{time_in_secs} seconds")
 print(f"{time_in_mins} minutes.")
 print(f"Saved | {folder_name}")
+
+
+
 # Play the sound after the completion of Scraping process:
 winsound.PlaySound('notification.mp3', winsound.SND_FILENAME)
 
