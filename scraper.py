@@ -41,13 +41,13 @@ time_in_mins = round(total_time/60)
 d = {
     "Names": all_daraz_product_names,
     "Prices": all_daraz_product_prices,
-    "Links": all_daraz_product_links
+    "Links": all_daraz_product_links 
 }
 
 df = pd.DataFrame(d)
 
-df.to_json(f"{folder_name}//{product_category} database.json", indent=4)
-df.to_excel(f"{folder_name}//{product_category} database.xlsx", index=False)
+df.to_json(f"Daraz {folder_name}//Daraz {product_category} database.json", indent=4)
+df.to_excel(f"Daraz {folder_name}//Daraz {product_category} database.xlsx", index=False)
 
 print(f"{time_in_secs} seconds")
 print(f"{time_in_mins} minutes.")
