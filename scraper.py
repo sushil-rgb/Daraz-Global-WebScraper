@@ -12,9 +12,9 @@ import asynchat
 
 start_time = time.time()
 
-product_url = "https://www.daraz.com.np/auto-parts-spares/?spm=a2a0e.searchlistcategory.cate_12_5.4.d1654f4f5xaidm"
+product_url = "https://www.daraz.com.np/sp-nutrition/?spm=a2a0e.searchlistcategory.cate_11.10.497b4453rb8GlX"
 
-total_pages = 51
+total_pages = DarazScraper(product_url).number_of_pages()
 list_of_urls = SplitDarazURL(product_url).split(total_pages)
 product_category = DarazScraper(product_url).category_name()
 
