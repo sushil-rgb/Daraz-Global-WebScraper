@@ -1,5 +1,5 @@
 from playwright.sync_api import sync_playwright
-from daraz_tools_oop import AlertEmail, DarazIndivLinkScraper, DarazScraper, FlattenedLists, SplitDarazURL, CreatePathDirectory, alertEmail
+from daraz_tools_oop import AlertEmail, DarazIndivLinkScraper, DarazScraper, FlattenedLists, SplitDarazURL, CreatePathDirectory, AlertEmail
 import time
 import winsound
 import pandas as pd
@@ -69,6 +69,5 @@ print(f"Saved | {folder_name}")
 
 # Play the sound after the completion of Scraping process:
 winsound.PlaySound('notification.mp3', winsound.SND_FILENAME)
-
 
 
