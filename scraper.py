@@ -1,16 +1,16 @@
-from playwright.sync_api import sync_playwright
+
 from daraz_tools_oop import DarazIndivLinkScraper, DarazScraper, FlattenedLists, SplitDarazURL, CreatePathDirectory, AlertEmail
 import time
 import winsound
 import pandas as pd
+
 import os
-import shutil
-import sys
-import smtplib
-import asynchat
-import os
-import smtplib
-from email.message import EmailMessage
+
+
+
+
+
+
 
 
 start_time = time.time()
