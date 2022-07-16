@@ -1,9 +1,13 @@
+from email.message import EmailMessage
 from email.mime import base
 from playwright.sync_api import sync_playwright
 from playwright.async_api import async_playwright
 import asyncio
 import itertools
 import random
+import os
+import shutil
+import smtplib
 
 
 def get_user_agent():
@@ -30,7 +34,6 @@ class FlattenedLists:
     def flat(self, d_lists):
         self.d_lists = d_lists
         return list(itertools.chain(*self.d_lists))
-
 
 
 class DarazScraper:    
@@ -84,8 +87,11 @@ class DarazScraper:
                 self.link_selector = "//div[@class='title--wFj93']/a"
 
                 self.page.wait_for_selector(self.link_selector, timeout=10000)
-                hyper_links = [f"https:{link.get_attribute('href')}" for link in self.page.query_selector_all(self.link_selector)]
-
+                try:
+                    hyper_links = [f"https:{link.get_attribute('href')}" for link in self.page.query_selector_all(self.link_selector)]
+                    assert hyper_links
+                except TypeError:
+                    hyper_links = "N/A"
                 # Using for loop to print sraped data in output console:
                 for link in self.page.query_selector_all(self.link_selector):
                     print(f"https:{link.get_attribute('href')}")
@@ -146,7 +152,6 @@ class DarazScraper:
                 self.browser.close()
 
     
-
 # Below class scrapes data from an individual product link available in Daraz Nepal:
 class DarazIndivLinkScraper:        
     def __init__(self, website_url):       
@@ -169,7 +174,7 @@ class DarazIndivLinkScraper:
                     self.browser.close()
 
                     return self.name   
-                except None:
+                except TypeError:
                     self.name = "N/A"
                     return self.name             
             except Exception as e:
@@ -193,7 +198,7 @@ class DarazIndivLinkScraper:
                     self.browser.close()
 
                     return self.price
-                except None:
+                except TypeError:
                     self.price = "N./A"
             except Exception as e:
                 print(f"Error in plawright script {self.page}")                
@@ -216,7 +221,7 @@ class DarazIndivLinkScraper:
                     self.browser.close()
 
                     return self.ogPrice
-                except None:
+                except TypeError:
                     self.ogPrice = "N/A"
             except Exception as e:
                 print(f"Error in plawright script {self.page}")
@@ -238,3 +243,42 @@ class SplitDarazURL:
             self.url_lists.append(self.new_url)
         
         return self.url_lists
+
+
+class CreatePathDirectory:
+    def __init__(self, folderName):
+        self.folderName = folderName
+
+
+    def createFolder(self):
+        self.parent_dir = os.getcwd()
+        self.path_dir = os.path.join(self.parent_dir, self.folderName)
+
+        # Overwriting the  directory if already existed:
+        if os.path.exists(self.path_dir):
+            shutil.rmtree(self.path_dir)
+        
+        os.mkdir(self.path_dir)
+        
+
+class AlertEmail:
+    def __init__(self, emailUserSender, emailSenderPassword, emailUserReceiver, msgContent, msgSubject):
+        self.emailUserReceiver = emailUserReceiver
+        self.emailUserSender = emailUserSender        
+        self.emailPassword = emailSenderPassword
+        self.msgContent = msgContent
+        self.msgSubject = msgSubject
+
+    
+    def sendAlert(self):
+        self.msg = EmailMessage()
+        self.msg['Subject'] = self.msgSubject
+        self.msg["From"] = self.emailUserSender
+        self.msg['To'] = self.emailUserReceiver
+        self.msg.set_content(self.msgContent)
+        
+
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+            smtp.login(self.emailUserSender, self.emailPassword)
+            smtp.send_message(self.msg)
+            smtp.quit()
