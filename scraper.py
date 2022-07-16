@@ -1,5 +1,5 @@
 from playwright.sync_api import sync_playwright
-from daraz_tools_oop import AlertEmail, DarazIndivLinkScraper, DarazScraper, FlattenedLists, SplitDarazURL, CreatePathDirectory, AlertEmail
+from daraz_tools_oop import DarazIndivLinkScraper, DarazScraper, FlattenedLists, SplitDarazURL, CreatePathDirectory, AlertEmail
 import time
 import winsound
 import pandas as pd
