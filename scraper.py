@@ -10,13 +10,14 @@ import os
 start_time = time.time()
 
 
-main_url = "https://www.daraz.com.np/fitness-trackers/?spm=a2a0e.searchlistcategory.cate_7_3.3.631638ffhBxRrw"
+main_url = """https://www.daraz.com.np/baby-personal-care/?spm=a2a0e.searchlistcategory.cate_9.3.3a4515f9Gu5Kcj"""
 
 total_pages = DarazScraper(main_url).number_of_pages()
 list_of_urls = SplitDarazURL(main_url).split(total_pages)
 product_category = DarazScraper(main_url).category_name()
 
-print(f"Total number of pages | {total_pages}\n-----------------------------")
+print(f"Scraping product category | {product_category}\n----------------------------------------------------------")
+print(f"Total number of pages | {total_pages}\n----------------------------------------------------------")
 
 # Setting up the directory for downloaded databases:
 folder_name = f"Daraz {product_category}" 

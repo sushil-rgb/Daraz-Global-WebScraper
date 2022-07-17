@@ -54,11 +54,14 @@ class DarazScraper:
 
                 self.browser.close()
                 return self.categ_name
-            except Exception as e:
-                print(f"Playwright Script error. | {self.page}")
-                traceback.print_exc()
+            except PlaywrightTimeoutError:
+                print(f"Timeout error. Reloading the page | {self.base_url}\n----------------------------------------------------------")
+                self.query_name_selector = "//div[@class=' tips--QRnmZ']"
+                self.page.wait_for_selector(self.query_name_selector, timeout=5000)
+                self.categ_name = self.page.query_selector(self.query_name_selector).inner_text().strip().replace('"', "")
 
-                self.browser.close()  
+                self.browser.close() 
+                return self.categ_name                 
                
     
     def number_of_pages(self):
