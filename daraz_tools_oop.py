@@ -283,3 +283,4 @@ class AlertEmail:
             smtp.login(self.emailUserSender, self.emailPassword)
             smtp.send_message(self.msg)
             smtp.quit()
+
