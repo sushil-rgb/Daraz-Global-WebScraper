@@ -85,8 +85,8 @@ class DarazScraper:
             # Splitting the url to get the page number for tracking purpose:
             # The split could be done cleaner by using regex, this one is ugly:
             self.letsplit = self.base_url.split("?")[-1].split("&")[0].split("=")[-1]
-            print(f"Scraping page number | {self.letsplit}\n---------------------------------------------------------------------------------------------------------------------")
-    
+            print(f"Scraping page number | {self.letsplit}\n-----------------------------")
+
                 
             try:                
                 self.link_selector = "//div[@class='title--wFj93']/a"
