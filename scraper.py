@@ -9,7 +9,7 @@ import os
 start_time = time.time()
 
 
-product_url = "https://www.daraz.com.np/sp-nutrition/?spm=a2a0e.searchlistcategory.cate_11.10.12f23969UiCQpj"
+product_url = "https://www.daraz.com.np/laundry-cleaning/?spm=a2a0e.searchlistcategory.breadcrumb.3.62cb20f9Qh8p4F"
 
 total_pages = DarazScraper(product_url).number_of_pages()
 list_of_urls = SplitDarazURL(product_url).split(total_pages)
@@ -22,10 +22,11 @@ folder_name = f"Daraz {product_category}"
 CreatePathDirectory(folder_name).createFolder()
 
 
+store_all_datas_in_lists = FlattenedLists().flat([DarazScraper(url).scrapeLinksNamesPrices() for url in list_of_urls])
 try:
-    all_daraz_product_links = FlattenedLists().flat([DarazScraper(url).all_product_links() for url in list_of_urls])
-    all_daraz_product_names = FlattenedLists().flat([DarazScraper(url).all_product_names() for url in list_of_urls])
-    all_daraz_product_prices = FlattenedLists().flat([DarazScraper(url).all_product_prices() for url in list_of_urls])
+    all_daraz_product_links = store_all_datas_in_lists[0]
+    all_daraz_product_names = store_all_datas_in_lists[1]
+    all_daraz_product_prices = store_all_datas_in_lists[2]
 except Exception as e:
     traceback.print_exc()
 

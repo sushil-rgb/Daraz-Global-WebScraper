@@ -74,7 +74,7 @@ class DarazScraper:
             
 
 
-    def all_product_links(self):
+    def scrapeLinksNamesPrices(self):
         # Setting up the Playwright driver:
         with sync_playwright() as p:
             self.browser = p.chromium.launch(headless=True, slow_mo=1*1000)
@@ -85,32 +85,11 @@ class DarazScraper:
                 self.page.wait_for_url(self.base_url)
                 self.link_selector = "//div[@class='title--wFj93']/a"
 
-                self.page.wait_for_selector(self.link_selector, timeout=10000)
-                try:
-                    hyper_links = [f"https:{link.get_attribute('href')}" for link in self.page.query_selector_all(self.link_selector)]
-                    assert hyper_links
-                except TypeError:
-                    hyper_links = "N/A"
-                # Using for loop to print sraped data in output console:
-                for link in self.page.query_selector_all(self.link_selector):
-                    print(f"https:{link.get_attribute('href')}")
-                self.browser.close()
-
-                return hyper_links
-            except Exception as e:
-                print(f"Playwright Script error. | {self.page}")
-                traceback.print_exc()
-                self.browser.close()
-    
-        
-    def all_product_names(self):
-        with sync_playwright() as p:
-            self.browser = p.chromium.launch(headless=True, slow_mo=1*1000)
-            self.page = self.browser.new_page(user_agent=self.headers)
-            self.page.goto(self.base_url)
-
-            try:
-                self.page.wait_for_url(self.base_url)
+                self.page.wait_for_selector(self.link_selector, timeout=100000)
+               
+                self.hyper_links = [f"https:{link.get_attribute('href')}" for link in self.page.query_selector_all(self.link_selector)]                
+                
+              
                 self.prod_selector = '//div[@class="title--wFj93"]'
                 self.page.wait_for_selector(self.prod_selector, timeout=10000)
                 
@@ -120,39 +99,24 @@ class DarazScraper:
 
                 # Using for loop to print sraped data in output console:
                 for name in self.page.query_selector_all(self.prod_selector):
-                    print(name.inner_text().strip())
-                self.browser.close()
+                    print(name.inner_text().strip())               
 
-                return self.prod_names
-            except Exception as e:
-                print(f"Playwright Script error. | {self.page}")
-                traceback.print_exc()
-                self.browser.close()
-
-
-    def all_product_prices(self):
-        with sync_playwright() as p:
-            self.browser = p.chromium.launch(headless=True, slow_mo=1*1000)
-            self.page = self.browser.new_page(user_agent=self.headers)
-            self.page.goto(self.base_url)
-
-            try:
-                self.page.wait_for_url(self.base_url)
+            
+                
                 self.price_selector = "//span[@class='currency--GVKjl']"
                 self.page.wait_for_selector(self.price_selector, timeout=10000)
 
                 self.prod_prices = [price.inner_text() for price in self.page.query_selector_all(self.price_selector)]
                 # Using for loop to print sraped data in output console:
-                for price in self.page.query_selector_all(self.price_selector):
-                    print(price.inner_text().strip())
                 self.browser.close()
+                                
+                return self.hyper_links, self.prod_names, self.prod_prices
+                
 
-                return self.prod_prices
             except Exception as e:
                 print(f"Playwright Script error. | {self.page}")
                 traceback.print_exc()
-                self.browser.close()
-
+       
     
 # Below class scrapes data from an individual product link available in Daraz Nepal:
 class DarazIndivLinkScraper:        
