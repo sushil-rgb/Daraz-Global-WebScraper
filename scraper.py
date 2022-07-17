@@ -10,7 +10,7 @@ import os
 start_time = time.time()
 
 
-product_url = "https://www.daraz.com.np/kids-sunglasses/?spm=a2a0e.searchlistcategory.cate_4_4.3.67a55cb0sR1FHW"
+product_url = "https://www.daraz.com.np/mens-shoes/?spm=a2a0e.pdp.cate_3.3.1a04rPxArPxACq"
 
 total_pages = DarazScraper(product_url).number_of_pages()
 list_of_urls = SplitDarazURL(product_url).split(total_pages)
@@ -24,13 +24,11 @@ CreatePathDirectory(folder_name).createFolder()
 
 
 store_all_datas_in_lists = FlattenedLists().flat([DarazScraper(url).scrapeLinksNamesPrices() for url in list_of_urls])
-try:
-    all_daraz_product_links = store_all_datas_in_lists[0]
-    all_daraz_product_names = store_all_datas_in_lists[1]
-    all_daraz_product_prices = store_all_datas_in_lists[2]
-except TypeError:
-    traceback.print_exc()
-    pass
+
+all_daraz_product_links = store_all_datas_in_lists[0]
+all_daraz_product_names = store_all_datas_in_lists[1]
+all_daraz_product_prices = store_all_datas_in_lists[2]
+
 
 
 d = {
