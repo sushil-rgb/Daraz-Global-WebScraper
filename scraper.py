@@ -2,6 +2,7 @@ from daraz_tools_oop import DarazIndivLinkScraper, DarazScraper, FlattenedLists,
 import time
 import winsound
 import pandas as pd
+import traceback
 import os
 
 
@@ -21,10 +22,12 @@ folder_name = f"Daraz {product_category}"
 CreatePathDirectory(folder_name).createFolder()
 
 
-all_daraz_product_links = FlattenedLists().flat([DarazScraper(url).all_product_links() for url in list_of_urls])
-all_daraz_product_names = FlattenedLists().flat([DarazScraper(url).all_product_names() for url in list_of_urls])
-all_daraz_product_prices = FlattenedLists().flat([DarazScraper(url).all_product_prices() for url in list_of_urls])
-
+try:
+    all_daraz_product_links = FlattenedLists().flat([DarazScraper(url).all_product_links() for url in list_of_urls])
+    all_daraz_product_names = FlattenedLists().flat([DarazScraper(url).all_product_names() for url in list_of_urls])
+    all_daraz_product_prices = FlattenedLists().flat([DarazScraper(url).all_product_prices() for url in list_of_urls])
+except Exception as e:
+    traceback.print_exc()
 
 
 d = {

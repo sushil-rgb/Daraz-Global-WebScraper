@@ -1,4 +1,5 @@
 from email.message import EmailMessage
+import traceback
 from playwright.sync_api import sync_playwright
 import itertools
 import random
@@ -56,6 +57,7 @@ class DarazScraper:
                 return self.categ_name
             except Exception as e:
                 print(f"Playwright Script error. | {self.page}")
+                traceback.print_exc()
                 self.browser.close()  
                
     
@@ -97,6 +99,7 @@ class DarazScraper:
                 return hyper_links
             except Exception as e:
                 print(f"Playwright Script error. | {self.page}")
+                traceback.print_exc()
                 self.browser.close()
     
         
@@ -123,6 +126,7 @@ class DarazScraper:
                 return self.prod_names
             except Exception as e:
                 print(f"Playwright Script error. | {self.page}")
+                traceback.print_exc()
                 self.browser.close()
 
 
@@ -146,6 +150,7 @@ class DarazScraper:
                 return self.prod_prices
             except Exception as e:
                 print(f"Playwright Script error. | {self.page}")
+                traceback.print_exc()
                 self.browser.close()
 
     
@@ -175,7 +180,8 @@ class DarazIndivLinkScraper:
                     self.name = "N/A"
                     return self.name             
             except Exception as e:
-                print(f"Error in plawright script {self.page}")                
+                print(f"Error in plawright script {self.page}")   
+                traceback.print_exc()             
                 self.browser.close()
     
 
@@ -196,9 +202,10 @@ class DarazIndivLinkScraper:
 
                     return self.price
                 except TypeError:
-                    self.price = "N./A"
+                    self.price = "N/A"
             except Exception as e:
-                print(f"Error in plawright script {self.page}")                
+                print(f"Error in plawright script {self.page}") 
+                traceback.print_exc()               
                 self.browser.close()                
         
     
@@ -222,6 +229,7 @@ class DarazIndivLinkScraper:
                     self.ogPrice = "N/A"
             except Exception as e:
                 print(f"Error in plawright script {self.page}")
+                traceback.print_exc()
                 self.browser.close()
 
 
