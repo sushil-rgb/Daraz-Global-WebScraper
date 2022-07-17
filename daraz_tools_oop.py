@@ -1,6 +1,6 @@
 from email.message import EmailMessage
 import traceback
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeoutError
 import itertools
 import random
 import os
@@ -44,7 +44,8 @@ class DarazScraper:
         with sync_playwright() as p:
             self.browser = p.chromium.launch(headless=True, slow_mo=1*1000)
             self.page = self.browser.new_page(user_agent=self.headers)
-            self.page.goto(self.base_url)            
+            self.page.goto(self.base_url)           
+
             
             try:
                 self.page.wait_for_url(self.base_url)
@@ -61,7 +62,6 @@ class DarazScraper:
                 self.browser.close()  
                
     
-
     def number_of_pages(self):
         with sync_playwright() as p:
             self.browser = p.chromium.launch(headless=True, slow_mo=1*1000)
@@ -78,51 +78,43 @@ class DarazScraper:
     def scrapeLinksNamesPrices(self):
         # Setting up the Playwright driver:
         with sync_playwright() as p:
-            self.browser = p.chromium.launch(headless=True, slow_mo=1*1000)
+            self.browser = p.chromium.launch(headless=True, slow_mo=1*5000)
             self.page = self.browser.new_page(user_agent=self.headers)
             self.page.goto(self.base_url)
 
-            try:
-                self.page.wait_for_url(self.base_url)
-                try:
-                    self.link_selector1 = "//div[@class='title--wFj93']/a"
-                    self.page.wait_for_selector(self.link_selector1, timeout=10000)
-                    self.hyper_links = [f"https:{link.get_attribute('href')}" for link in self.page.query_selector_all(self.link_selector1)]
-                except TimeoutError:
-                    self.link_selector2 = "//div[@class='mainPic--ehOdr']/a"
-                    self.page.wait_for_selector(self.link_selector2, timeout=10000)
-                    self.hyper_links = [f"https:{link.get_attribute('href')}" for link in self.page.query_selector_all(self.link_selector2)]                
-               
-                                
+            # Splitting the url to get the page number for tracking purpose:
+            # The split could be done cleaner by using regex, this one is ugly:
+            self.letsplit = self.base_url.split("?")[-1].split("&")[0].split("=")[-1]
+            print(f"Scraping page number | {self.letsplit}\n---------------------------------------------------------------------------------------------------------------------")
+    
                 
+            try:                
+                self.link_selector = "//div[@class='title--wFj93']/a"
+                self.page.wait_for_selector(self.link_selector, timeout=10000)
+                self.hyper_links = [f"https:{link.get_attribute('href')}" for link in self.page.query_selector_all(self.link_selector)]
+            except PlaywrightTimeoutError:
+                print("Timeout error. Reloading the page.")
+                self.page.reload()
+                self.link_selector = "//div[@class='title--wFj93']/a"
+                self.page.wait_for_selector(self.link_selector, timeout=10000)
+                self.hyper_links = [f"https:{link.get_attribute('href')}" for link in self.page.query_selector_all(self.link_selector)]  
               
-                self.prod_selector = '//div[@class="title--wFj93"]'
-                self.page.wait_for_selector(self.prod_selector, timeout=10000)
-                
-                self.prod_query_selector = self.page.query_selector_all(self.prod_selector)
-                
-                self.prod_names = [name.inner_text() for name in self.prod_query_selector]
-
-                # Using for loop to print sraped data in output console:
-                for name in self.page.query_selector_all(self.prod_selector):
-                    print(name.inner_text().strip())               
-
+            self.prod_selector = '//div[@class="title--wFj93"]'
+            self.page.wait_for_selector(self.prod_selector, timeout=10000)
             
-                
-                self.price_selector = "//span[@class='currency--GVKjl']"
-                self.page.wait_for_selector(self.price_selector, timeout=10000)
+            self.prod_query_selector = self.page.query_selector_all(self.prod_selector)
+            
+            self.prod_names = [name.inner_text() for name in self.prod_query_selector] 
+            
+            self.price_selector = "//span[@class='currency--GVKjl']"
+            self.page.wait_for_selector(self.price_selector, timeout=10000)
 
-                self.prod_prices = [price.inner_text() for price in self.page.query_selector_all(self.price_selector)]
-                # Using for loop to print sraped data in output console:
-                self.browser.close()
-                                
-                return self.prod_names, self.prod_prices, self.hyper_links
-                
-
-            except Exception as e:
-                print(f"Playwright Script error. | {self.page}")
-                traceback.print_exc()
-       
+            self.prod_prices = [price.inner_text() for price in self.page.query_selector_all(self.price_selector)]
+           
+            self.browser.close()
+                            
+            return self.prod_names, self.prod_prices, self.hyper_links
+           
     
 # Below class scrapes data from an individual product link available in Daraz Nepal:
 class DarazIndivLinkScraper:        
@@ -237,25 +229,21 @@ class CreatePathDirectory:
         
 
 class AlertEmail:
-    def __init__(self, emailUserSender, emailSenderPassword):
-        
+    def __init__(self, emailUserSender, emailSenderPassword):        
         self.emailUserSender = emailUserSender        
-        self.emailPassword = emailSenderPassword
-        
+        self.emailPassword = emailSenderPassword        
 
     
     def sendAlert(self, emailUserReceiver, msgSubject, msgContent):
         self.emailUserReceiver = emailUserReceiver
         self.msgSubject = msgSubject
-        self.msgContent = msgContent
-        
+        self.msgContent = msgContent        
 
         self.msg = EmailMessage()
         self.msg['Subject'] = self.msgSubject
         self.msg["From"] = self.emailUserSender
         self.msg['To'] = self.emailUserReceiver
-        self.msg.set_content(self.msgContent)
-        
+        self.msg.set_content(self.msgContent)        
 
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
             smtp.login(self.emailUserSender, self.emailPassword)

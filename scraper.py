@@ -10,12 +10,13 @@ import os
 start_time = time.time()
 
 
-main_url = "https://www.daraz.com.np/electric-kettles-thermo-pots/?spm=a2a0e.searchlistcategory.cate_6_5.4.a78c4140MuVxQB"
+main_url = "https://www.daraz.com.np/cooling-heating/?spm=a2a0e.searchlistcategory.breadcrumb.3.7469517aL8qy1F"
 
 total_pages = DarazScraper(main_url).number_of_pages()
 list_of_urls = SplitDarazURL(main_url).split(total_pages)
 product_category = DarazScraper(main_url).category_name()
 
+print(f"Total number of pages | {total_pages}")
 
 # Setting up the directory for downloaded databases:
 folder_name = f"Daraz {product_category}" 
@@ -49,7 +50,7 @@ EMAIL_ADDRESS = os.environ.get("USER_EMAIL")
 EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")
 RECEIVERS = "rockin_sushil@hotmail.com"  # Paste the email address here
 SUBJECT = "ALERT EMAIL!!!!!!"
-CONTENT = f"Hello Sushil bro! {folder_name} database is saved."
+CONTENT = f"Hello Sushil! {folder_name} database is saved."
 
 
 AlertEmail(EMAIL_ADDRESS, EMAIL_PASSWORD).sendAlert(RECEIVERS, SUBJECT, CONTENT)
