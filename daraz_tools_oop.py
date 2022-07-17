@@ -116,7 +116,7 @@ class DarazScraper:
                 # Using for loop to print sraped data in output console:
                 self.browser.close()
                                 
-                return self.hyper_links, self.prod_names, self.prod_prices
+                return self.prod_names, self.prod_prices, self.hyper_links
                 
 
             except Exception as e:
