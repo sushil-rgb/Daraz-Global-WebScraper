@@ -68,9 +68,10 @@ class DarazScraper:
             self.page = self.browser.new_page(user_agent=self.headers)
             self.page.goto(self.base_url)
 
-            last_page_number = self.page.query_selector_all("//li[@tabindex='0']")
+            self.last_page_number = self.page.query_selector_all("//li[@tabindex='0']")
+            self.last_one = int(self.last_page_number[len(self.last_page_number)-2].get_attribute('title'))
 
-            return int(last_page_number[len(last_page_number)-2].get_attribute('title'))
+            return self.last_one
             
 
 
@@ -88,7 +89,7 @@ class DarazScraper:
                     self.page.wait_for_selector(self.link_selector1, timeout=10000)
                     self.hyper_links = [f"https:{link.get_attribute('href')}" for link in self.page.query_selector_all(self.link_selector1)]
                 except TimeoutError:
-                    self.link_selector2 = "//div[@class='mainPic--ehOdr']"
+                    self.link_selector2 = "//div[@class='mainPic--ehOdr']/a"
                     self.page.wait_for_selector(self.link_selector2, timeout=10000)
                     self.hyper_links = [f"https:{link.get_attribute('href')}" for link in self.page.query_selector_all(self.link_selector2)]                
                

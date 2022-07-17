@@ -1,3 +1,4 @@
+from typing import Type
 from daraz_tools_oop import DarazIndivLinkScraper, DarazScraper, FlattenedLists, SplitDarazURL, CreatePathDirectory, AlertEmail
 import time
 import winsound
@@ -9,7 +10,7 @@ import os
 start_time = time.time()
 
 
-product_url = "https://www.daraz.com.np/mens-boxers/?spm=a2a0e.searchlistcategory.cate_3_6.3.11083969qXhVuF"
+product_url = "https://www.daraz.com.np/kids-sunglasses/?spm=a2a0e.searchlistcategory.cate_4_4.3.67a55cb0sR1FHW"
 
 total_pages = DarazScraper(product_url).number_of_pages()
 list_of_urls = SplitDarazURL(product_url).split(total_pages)
@@ -27,8 +28,9 @@ try:
     all_daraz_product_links = store_all_datas_in_lists[0]
     all_daraz_product_names = store_all_datas_in_lists[1]
     all_daraz_product_prices = store_all_datas_in_lists[2]
-except Exception as e:
+except TypeError:
     traceback.print_exc()
+    pass
 
 
 d = {
