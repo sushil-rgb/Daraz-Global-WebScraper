@@ -1,8 +1,5 @@
 from email.message import EmailMessage
-from email.mime import base
 from playwright.sync_api import sync_playwright
-from playwright.async_api import async_playwright
-import asyncio
 import itertools
 import random
 import os
@@ -262,15 +259,19 @@ class CreatePathDirectory:
         
 
 class AlertEmail:
-    def __init__(self, emailUserSender, emailSenderPassword, emailUserReceiver, msgContent, msgSubject):
-        self.emailUserReceiver = emailUserReceiver
+    def __init__(self, emailUserSender, emailSenderPassword):
+        
         self.emailUserSender = emailUserSender        
         self.emailPassword = emailSenderPassword
-        self.msgContent = msgContent
-        self.msgSubject = msgSubject
+        
 
     
-    def sendAlert(self):
+    def sendAlert(self, emailUserReceiver, msgSubject, msgContent):
+        self.emailUserReceiver = emailUserReceiver
+        self.msgSubject = msgSubject
+        self.msgContent = msgContent
+        
+
         self.msg = EmailMessage()
         self.msg['Subject'] = self.msgSubject
         self.msg["From"] = self.emailUserSender

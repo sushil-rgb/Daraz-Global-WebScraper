@@ -1,19 +1,12 @@
-from playwright.sync_api import sync_playwright
 from daraz_tools_oop import AlertEmail, DarazIndivLinkScraper, DarazScraper, FlattenedLists, SplitDarazURL, CreatePathDirectory, AlertEmail
 import time
 import winsound
 import pandas as pd
 import os
-import shutil
-import sys
-import smtplib
-import asynchat
-import os
-import smtplib
-from email.message import EmailMessage
 
 
 start_time = time.time()
+
 
 product_url = "https://www.daraz.com.np/sp-nutrition/?spm=a2a0e.searchlistcategory.cate_11.10.12f23969UiCQpj"
 
@@ -50,11 +43,11 @@ df.to_excel(f"{os.getcwd()}//{folder_name}//{product_category} database.xlsx", i
 EMAIL_ADDRESS = os.environ.get("USER_EMAIL")
 EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")
 RECEIVERS = ['rockin_sushil@hotmail.com', 'gunz19able@gmail.com']
-content = f"Hello Sushil! {folder_name} database."
-subject = "ALERT EMAIL!!!!!!"
+SUBJECT = "ALERT EMAIL!!!!!!"
+CONTENT = f"Hello Sushil! {folder_name} database."
 
-AlertEmail(EMAIL_ADDRESS, EMAIL_PASSWORD, RECEIVERS, content, subject)
 
+AlertEmail(EMAIL_ADDRESS, EMAIL_PASSWORD).sendAlert(RECEIVERS, SUBJECT, CONTENT)
 
 
 total_time = round(time.time()-start_time, 2)
@@ -66,8 +59,6 @@ print(f"{time_in_mins} minutes.")
 print(f"Saved | {folder_name}")
 
 
-
 # Play the sound after the completion of Scraping process:
 winsound.PlaySound('notification.mp3', winsound.SND_FILENAME)
-
 
