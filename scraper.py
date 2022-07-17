@@ -9,7 +9,7 @@ import os
 start_time = time.time()
 
 
-product_url = "https://www.daraz.com.np/laundry-cleaning/?spm=a2a0e.searchlistcategory.breadcrumb.3.62cb20f9Qh8p4F"
+product_url = "https://www.daraz.com.np/mens-boxers/?spm=a2a0e.searchlistcategory.cate_3_6.3.11083969qXhVuF"
 
 total_pages = DarazScraper(product_url).number_of_pages()
 list_of_urls = SplitDarazURL(product_url).split(total_pages)

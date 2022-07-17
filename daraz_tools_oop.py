@@ -83,11 +83,16 @@ class DarazScraper:
 
             try:
                 self.page.wait_for_url(self.base_url)
-                self.link_selector = "//div[@class='title--wFj93']/a"
-
-                self.page.wait_for_selector(self.link_selector, timeout=100000)
+                try:
+                    self.link_selector1 = "//div[@class='title--wFj93']/a"
+                    self.page.wait_for_selector(self.link_selector1, timeout=10000)
+                    self.hyper_links = [f"https:{link.get_attribute('href')}" for link in self.page.query_selector_all(self.link_selector1)]
+                except TimeoutError:
+                    self.link_selector2 = "//div[@class='mainPic--ehOdr']"
+                    self.page.wait_for_selector(self.link_selector2, timeout=10000)
+                    self.hyper_links = [f"https:{link.get_attribute('href')}" for link in self.page.query_selector_all(self.link_selector2)]                
                
-                self.hyper_links = [f"https:{link.get_attribute('href')}" for link in self.page.query_selector_all(self.link_selector)]                
+                                
                 
               
                 self.prod_selector = '//div[@class="title--wFj93"]'
