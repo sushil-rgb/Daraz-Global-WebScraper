@@ -47,7 +47,7 @@ EMAIL_ADDRESS = os.environ.get("USER_EMAIL")
 EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")
 RECEIVERS = ['rockin_sushil@hotmail.com', 'gunz19able@gmail.com']
 SUBJECT = "ALERT EMAIL!!!!!!"
-CONTENT = f"Hello Sushil! {folder_name} database."
+CONTENT = f"Hello Sushil bro! {folder_name} database is saved."
 
 
 AlertEmail(EMAIL_ADDRESS, EMAIL_PASSWORD).sendAlert(RECEIVERS, SUBJECT, CONTENT)
