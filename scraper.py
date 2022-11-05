@@ -49,7 +49,7 @@ df.to_excel(f"{os.getcwd()}//{folder_name}//{product_category} database.xlsx", i
 # Sender address:
 EMAIL_ADDRESS = os.environ.get("USER_EMAIL")
 EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")
-RECEIVERS = "rockin_sushil@hotmail.com"  # Paste the email address here
+RECEIVERS = ""  # Paste the email address here
 SUBJECT = "ALERT EMAIL!!!!!!"
 CONTENT = f"Hello Sushil! {folder_name} database is saved."
 

@@ -8,24 +8,11 @@ import shutil
 import smtplib
 
 
-def get_user_agent():
-    uastrings = [
-        "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.111 Safari/537.36",
-        "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.72 Safari/537.36",
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10) AppleWebKit/600.1.25 (KHTML, like Gecko) Version/8.0 "
-        "Safari/600.1.25",
-        "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:33.0) Gecko/20100101 Firefox/33.0",
-        "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.111 Safari/537.36",
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.111 "
-        "Safari/537.36",
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/600.1.17 (KHTML, like Gecko) Version/7.1 "
-        "Safari/537.85.10",
-        "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko",
-        "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:33.0) Gecko/20100101 Firefox/33.0",
-        "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.104 Safari/537.36"
-    ]
- 
-    return random.choice(uastrings)
+def userAgents():
+   with open(f"{os.getcwd()}\\user-agents.txt") as f:
+    agents = f.read().split("\n")
+    return random.choice(agents)
+    
 
 
 class FlattenedLists:
@@ -37,12 +24,12 @@ class FlattenedLists:
 class DarazScraper:    
     def __init__(self, base_url):
         self.base_url = base_url
-        self.headers = get_user_agent()
+        self.headers = userAgents()
         
     
     def category_name(self):
         with sync_playwright() as p:
-            self.browser = p.chromium.launch(headless=True, slow_mo=1*1000)
+            self.browser = p.chromium.launch(headless=False, slow_mo=1*1000)
             self.page = self.browser.new_page(user_agent=self.headers)
             self.page.goto(self.base_url) 
             
@@ -119,7 +106,7 @@ class DarazScraper:
 class DarazIndivLinkScraper:        
     def __init__(self, website_url):       
         self.website_url = website_url
-        self.headers = get_user_agent()
+        self.headers = userAgents()
     
     def product_name(self):       
         with sync_playwright() as p:
