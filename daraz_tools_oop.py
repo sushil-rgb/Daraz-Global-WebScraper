@@ -29,7 +29,7 @@ class DarazScraper:
     
     def category_name(self):
         with sync_playwright() as p:
-            self.browser = p.chromium.launch(headless=False, slow_mo=1*1000)
+            self.browser = p.chromium.launch(headless=True, slow_mo=1*1000)
             self.page = self.browser.new_page(user_agent=self.headers)
             self.page.goto(self.base_url) 
             

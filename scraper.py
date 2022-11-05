@@ -10,7 +10,7 @@ import os
 start_time = time.time()
 
 
-main_url = """https://www.daraz.com.np/baby-personal-care/?spm=a2a0e.searchlistcategory.cate_9.3.3a4515f9Gu5Kcj"""
+main_url = """https://www.daraz.com.np/usb-flash-drives/?spm=a2a0e.searchlistcategory.cate_7_7.3.14a01dc8LkBTDd"""
 
 total_pages = DarazScraper(main_url).number_of_pages()
 list_of_urls = SplitDarazURL(main_url).split(total_pages)
@@ -45,16 +45,6 @@ df = pd.DataFrame(d)
 df.to_json(f"{os.getcwd()}//{folder_name}//Daraz {product_category} database.json", indent=4)
 df.to_excel(f"{os.getcwd()}//{folder_name}//{product_category} database.xlsx", index=False)
 
-
-# Sender address:
-EMAIL_ADDRESS = os.environ.get("USER_EMAIL")
-EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")
-RECEIVERS = ""  # Paste the email address here
-SUBJECT = "ALERT EMAIL!!!!!!"
-CONTENT = f"Hello Sushil! {folder_name} database is saved."
-
-
-AlertEmail(EMAIL_ADDRESS, EMAIL_PASSWORD).sendAlert(RECEIVERS, SUBJECT, CONTENT)
 
 
 total_time = round(time.time()-start_time, 2)
