@@ -1,51 +1,26 @@
-from typing import Type
-from daraz_tools_oop import DarazIndivLinkScraper, DarazScraper, FlattenedLists, SplitDarazURL, CreatePathDirectory, AlertEmail
+from daraz_tools_oop import DarazScraper, CreatePathDirectory
 import time
 import winsound
 import pandas as pd
-import traceback
 import os
+import asyncio
 
 
 start_time = time.time()
 
 
-main_url = """https://www.daraz.com.np/usb-flash-drives/?spm=a2a0e.searchlistcategory.cate_7_7.3.14a01dc8LkBTDd"""
+main_url = """https://www.daraz.com.np/early-development-toys/?spm=a2a0e.11779170.cate_9_8.5.287d2d2b4n984L"""
+Daraz = DarazScraper(main_url)
 
-total_pages = DarazScraper(main_url).number_of_pages()
-list_of_urls = SplitDarazURL(main_url).split(total_pages)
-product_category = DarazScraper(main_url).category_name()
-
-print(f"Scraping product category | {product_category}\n----------------------------------------------------------")
-print(f"Total number of pages | {total_pages}\n----------------------------------------------------------")
+product_category = Daraz.category_name()
 
 # Setting up the directory for downloaded databases:
 folder_name = f"Daraz {product_category}" 
 CreatePathDirectory(folder_name).createFolder()
 
-all_product_names = []
-all_product_prices = []
-all_product_links = []
-
-for url in list_of_urls:
-    all_datas_daraz = DarazScraper(url).scrapeLinksNamesPrices()
-    all_product_names.append(all_datas_daraz[0])
-    all_product_prices.append(all_datas_daraz[1])
-    all_product_links.append(all_datas_daraz[-1])
-
-
-d = {
-    "Names": FlattenedLists().flat(all_product_names),
-    "Prices": FlattenedLists().flat(all_product_prices),
-    "Links": FlattenedLists().flat(all_product_links)
-}
-
-df = pd.DataFrame(d)
-
+df = pd.DataFrame(data=Daraz.scrapeMe())
 df.to_json(f"{os.getcwd()}//{folder_name}//Daraz {product_category} database.json", indent=4)
 df.to_excel(f"{os.getcwd()}//{folder_name}//{product_category} database.xlsx", index=False)
-
-
 
 total_time = round(time.time()-start_time, 2)
 time_in_secs = round(total_time)
@@ -53,7 +28,7 @@ time_in_mins = round(total_time/60)
 
 print(f"{time_in_secs} seconds")
 print(f"{time_in_mins} minutes.")
-print(f"Saved | {folder_name}")
+# print(f"Saved | {folder_name}")
 
 
 # Play the sound after the completion of Scraping process:
