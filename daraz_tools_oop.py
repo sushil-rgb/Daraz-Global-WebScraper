@@ -17,7 +17,8 @@ def userAgents():
     return random.choice(agents)
     
 
-def flat(self, d_lists):
+# For flattening the multi-dimensional lists:
+def flat(d_lists):
     d_lists = d_lists
     return list(itertools.chain(*d_lists))
 
@@ -38,20 +39,24 @@ class DarazScraper:
      
     # The below method scrapes product's names, prices, links and images according to the category:
     def scrapeMe(self):        
-        with sync_playwright() as p:            
+        with sync_playwright() as p: 
+            product_links = []           
+            product_names = []
+            product_prices = []
+            product_images = []
             browser = p.chromium.launch(headless=True, slow_mo=1*5000)
             page = browser.new_page(user_agent=userAgents())
             page.goto(self.base_url)
 
             print(f"Initiating the automation | Powered by Playwright.")
 
-            self.category_name = page.query_selector("//div[@class='info-panel--qjUGt']/h1[@class='title--Xj2oo']").inner_text().strip()
+            self.category = page.query_selector("//div[@class='info-panel--qjUGt']/h1[@class='title--Xj2oo']").inner_text().strip()
 
             # Scraping the total number of pages
             last_page_number = page.query_selector_all("//li[@tabindex='0']")
             last_one = int(last_page_number[len(last_page_number)-2].get_attribute('title'))
             
-            print(f"Category: {self.category_name} | Number of pages: {last_one}")
+            print(f"Category: {self.category} | Number of pages: {last_one}")
             next_page = page.locator("xpath=//li[@title='Next Page']")
 
             # Loop is for pagination: Added a 2 second interval between each click.
@@ -62,17 +67,19 @@ class DarazScraper:
                 names = [name.query_selector("//a").get_attribute('title') for name in page.query_selector_all("//div[@class='title--wFj93']")]
                 prices = [price.inner_text().strip() for price in page.query_selector_all("//span[@class='currency--GVKjl']")]
                 images = [img.get_attribute('src') for img in page.query_selector_all("//img[@class='image--WOyuZ ']")]
+                product_links.append(links), product_names.append(names), product_prices.append(prices), product_images.append(images)
                 
                 next_page.click()
+                
             
             browser.close()
-
+        
         # Storing in dicts for pandas dataframes:
         data_in_dicts = {
-            "Name": names,
-            "Price": prices,
-            "Link": links,
-            "Image": images
+            "Name": flat(product_names),
+            "Price": flat(product_prices),
+            "Link": flat(product_links),
+            "Image": flat(product_images)
         }
         
         return data_in_dicts

@@ -3,7 +3,6 @@ import time
 import winsound
 import pandas as pd
 import os
-import asyncio
 
 
 start_time = time.time()
