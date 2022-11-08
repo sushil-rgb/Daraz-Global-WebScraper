@@ -4,11 +4,11 @@ import winsound
 import pandas as pd
 import os
 
-
+ 
 start_time = time.time()
 
 
-main_url = """https://www.daraz.com.np/early-development-toys/?spm=a2a0e.11779170.cate_9_8.5.287d2d2b4n984L"""
+main_url = """https://www.daraz.com.np/mobiles-tablets-accessories/?spm=a2a0e.searchlistcategory.cate_7.1.4c955cb0xFEjl7"""
 Daraz = DarazScraper(main_url)
 
 product_category = Daraz.category_name()
