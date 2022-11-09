@@ -1,5 +1,4 @@
 from email.message import EmailMessage
-import traceback
 from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeoutError
 import itertools
 import random
@@ -17,8 +16,7 @@ def userAgents():
     
 
 # For flattening the multi-dimensional lists:
-def flat(d_lists):
-    d_lists = d_lists
+def flat(d_lists):    
     return list(itertools.chain(*d_lists))
 
 
