@@ -9,8 +9,8 @@ async def main():
     if await verifyDarazURL(url):
         print("Invalid link. Please enter a valid Daraz product category link.")
     else:
-        # results = await DarazScraper().scrapeMe(url)
-        results = await Daraz().product_details(url)
+        results = await Daraz().scrapeMe(url)
+        # results = await Daraz().product_details(url)
         return results
 
 
