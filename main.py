@@ -1,7 +1,7 @@
 import time 
 import asyncio
 from functionalities.tools import verifyDarazURL
-from scrapersFunctionalities.scraper import DarazScraper
+from scrapersFunctionalities.scraper import Daraz
 
 
 async def main():
@@ -10,7 +10,7 @@ async def main():
         print("Invalid link. Please enter a valid Daraz product category link.")
     else:
         # results = await DarazScraper().scrapeMe(url)
-        results = await DarazScraper().product_details(url)
+        results = await Daraz().product_details(url)
         return results
 
 

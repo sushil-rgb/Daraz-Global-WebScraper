@@ -5,7 +5,7 @@ from functionalities.tools import userAgents, TryExcept, yamlMe
 from playwright.async_api import async_playwright, TimeoutError as PlaywrightTimeoutError
 
 
-class DarazScraper:    
+class Daraz:    
     def __init__(self):        
         self.headers = {"User-Agent": userAgents()} 
         self.catchClause = TryExcept()
