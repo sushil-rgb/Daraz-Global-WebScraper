@@ -1,3 +1,4 @@
+import re
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
@@ -16,7 +17,7 @@ class Daraz:
         soup = BeautifulSoup(req.content, 'lxml')
         # category = f"{soup.find('span', class_='breadcrumb_item_anchor breadcrumb_item_anchor_last').text.strip()}"
         category = [cate.text.strip() for cate in soup.find('ul', class_='breadcrumb').find_all('li', class_='breadcrumb_item')]
-        name = ' '.join(category[1:])
+        name = re.sub(r"[/_\-]", "", ' '.join(category[1:]))
         return name
      
     async def product_details(self, product_url):
@@ -53,8 +54,7 @@ class Daraz:
 
             print(f"Initiating the automation | Powered by Playwright.")
 
-            self.category = await self.category_name(category_url)            
-            
+            self.category = await self.category_name(category_url)
             # Scraping the total number of pages
             last_page_number = await page.query_selector_all(self.yaml_me['last_page_number'])
             
@@ -89,7 +89,7 @@ class Daraz:
 
         # Now exporting to excel database:
         df = pd.DataFrame(data = daraz_dicts)
-        df.to_excel(f"Daraz database\\{self.category}.xlsx", index = False)      
+        df.to_excel(f"""Daraz database//{self.category}.xlsx""", index = False)      
         print(f"{self.category} saved.")       
 
 
