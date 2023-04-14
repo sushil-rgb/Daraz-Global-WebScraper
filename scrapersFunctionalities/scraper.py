@@ -16,13 +16,14 @@ class Daraz:
         req = requests.get(category_url, headers=self.headers)
         soup = BeautifulSoup(req.content, 'lxml')
         # category = f"{soup.find('span', class_='breadcrumb_item_anchor breadcrumb_item_anchor_last').text.strip()}"
-        category = [cate.text.strip() for cate in soup.find('ul', class_='breadcrumb').find_all('li', class_='breadcrumb_item')]
-        name = re.sub(r"[/_\-]", "", ' '.join(category[1:]))
-        return name
+        category = [cate.text.strip() for cate in soup.find('ul', class_='breadcrumb').find_all('li', class_='breadcrumb_item')][-1]
+        return category
+        # name = re.sub(r"[/_\-]", "", ' '.join(category[1:]))
+        # return name
      
     async def product_details(self, product_url):
         async with async_playwright() as p:
-            browser = await p.chromium.launch(headless = True)
+            browser = await p.firefox.launch(headless = True)
             context = await browser.new_context(user_agent = userAgents())
             page = await context.new_page()
 
@@ -72,6 +73,7 @@ class Daraz:
                         "Name": await self.catchClause.text(content.query_selector(self.yaml_me['category_product_names'])),
                         "Original price": await self.catchClause.text(content.query_selector(self.yaml_me['category_discount_price'])),
                         "Discount price": await self.catchClause.text(content.query_selector(self.yaml_me['category_og_price'])),
+                        "Discount rate": (await self.catchClause.text(content.query_selector(self.yaml_me['category_discount_rate']))).replace("-", ""),
                         "Hyperlink": f"""https:{await self.catchClause.attributes(content.query_selector(self.yaml_me['category_product_links']), 'href')}""",
                         "Image": await self.catchClause.attributes(content.query_selector(self.yaml_me['category_product_image']), 'src') ,
                     }                    

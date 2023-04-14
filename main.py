@@ -4,18 +4,19 @@ from functionalities.tools import verifyDarazURL
 from scrapersFunctionalities.scraper import Daraz
 
 
-async def main():
-    url = input("Enter a Daraz product URL:> ")
-    if await verifyDarazURL(url):
-        print("Invalid link. Please enter a valid Daraz product category link.")
-    else:
-        results = await Daraz().scrapeMe(url)
-        # results = await Daraz().product_details(url)
-        return results
-
-
 if __name__ == "__main__":
-    start_time = time.time()    
+    start_time = time.time() 
+
+    
+    async def main():
+        url = input("Enter a Daraz product URL:> ")
+        if await verifyDarazURL(url):
+            print("Invalid link. Please enter a valid Daraz product category link.")
+        else:
+            results = await Daraz().scrapeMe(url)
+            # results = await Daraz().product_details(url)
+            return results
+       
 
     print(asyncio.run(main()))
 
