@@ -5,7 +5,7 @@ from playwright.async_api import async_playwright, TimeoutError as PlaywrightTim
 from tools.functionalities import userAgents, TryExcept, yamlMe, check_domain, random_interval
 
 
-class Daraz:    
+class Daraz:
     """
     A class for scraping products from Daraz website.
 
@@ -34,15 +34,15 @@ class Daraz:
         Scrapes the products according to the category and saves them to an excel file.
     """
 
-    def __init__(self):       
+    def __init__(self):
         """
         Initializes the headers, catchClause and yaml_me attributes of the class.
-        """ 
+        """
 
-        self.headers = {"User-Agent": userAgents()} 
+        self.headers = {"User-Agent": userAgents()}
         self.catchClause = TryExcept()
-        self.yaml_me = yamlMe('selectors') 
-        
+        self.yaml_me = yamlMe('selectors')
+
 
     async def category_name(self, category_url):
         """
@@ -62,8 +62,8 @@ class Daraz:
         req = requests.get(category_url, headers=self.headers)
         soup = BeautifulSoup(req.content, 'lxml')
         category = [cate.text.strip() for cate in soup.find('ul', class_='breadcrumb').find_all('li', class_='breadcrumb_item')][-1]
-        return category        
-     
+        return category
+
     async def product_details(self, product_url):
         """
         Returns the details of the given product url.
@@ -78,7 +78,7 @@ class Daraz:
         datas : dict
             A dictionary containing the details of the product.
         """
-         
+
         async with async_playwright() as p:
             browser = await p.firefox.launch(headless = True)
             context = await browser.new_context(user_agent = userAgents())
@@ -99,8 +99,8 @@ class Daraz:
             await browser.close()
 
             return datas
-    
-    async def scrape_datas(self, category_url):        
+
+    async def scrape_datas(self, category_url):
         """
     This function scrapes product data from a category page on Daraz website, using Playwright library for web automation.
     The scraped data is stored in a Pandas DataFrame and exported as an Excel file.
@@ -114,18 +114,18 @@ class Daraz:
     Raises:
         None.
     """
-        
+
         # Initialize a list to store the scraped data.
-        daraz_dicts = []        
+        daraz_dicts = []
 
         # Launch the Playwright browser.
-        async with async_playwright() as p:                    
+        async with async_playwright() as p:
             browser = await p.chromium.launch(headless=True)
             context = await browser.new_context(user_agent = userAgents())
             page = await context.new_page()
-            
+
             # Navigate to the category URL.
-            await page.goto(category_url)            
+            await page.goto(category_url)
 
             # Determine the country from the URL.
             country = await check_domain(category_url)
@@ -134,30 +134,30 @@ class Daraz:
             print(f"""Initiating the automation | Powered by Playwright.\n
                       Daraz {country}
                   """)
-            
+
             # Get the name of the category being scraped.
             self.category = await self.category_name(category_url)
 
             # Get the total number of pages in the category.
-            page_number_elements = await page.query_selector_all(self.yaml_me['last_page_number'])            
-            self.last_page_number = int(await (page_number_elements[len(page_number_elements)-2]).get_attribute('title'))            
-            
+            page_number_elements = await page.query_selector_all(self.yaml_me['last_page_number'])
+            self.last_page_number = int(await (page_number_elements[len(page_number_elements)-2]).get_attribute('title'))
+
             # Print a message indicating the category and the number pages to be scraped.
             print(f"Category: {self.category} | Number of pages: {self.last_page_number}")
 
             # Get the "next page" button.
-            next_page = await page.query_selector(self.yaml_me['next_page_button'])            
+            next_page = await page.query_selector(self.yaml_me['next_page_button'])
 
             # Loop through the page using the "next page button".
-            for count in range(1, self.last_page_number+1):         
-                # Get the main content section of the page.       
-                main_contents = await page.query_selector_all(self.yaml_me['category_main_contents'])                  
+            for count in range(1, self.last_page_number+1):
+                # Get the main content section of the page.
+                main_contents = await page.query_selector_all(self.yaml_me['category_main_contents'])
 
                 # Print a message indicating the current page being scraped.
-                print(f"\nScraping page | {count}")     
+                print(f"\nScraping page | {count}")
 
                 # Wait for a short time before scraping the next page.
-                await page.wait_for_timeout(timeout=random_interval(5)*1000)            
+                await page.wait_for_timeout(timeout=random_interval(5)*1000)
 
                 # Loop through the products on the current page and extract their data.
                 for content in main_contents:
@@ -171,25 +171,23 @@ class Daraz:
                         "Discount rate": (await self.catchClause.text(content.query_selector(self.yaml_me['category_discount_rate']))).replace("-", ""),
                         "Hyperlink": f"""https:{await self.catchClause.attributes(content.query_selector(self.yaml_me['category_product_links']), 'href')}""",
                         "Image": await self.catchClause.attributes(content.query_selector(self.yaml_me['category_product_image']), 'src') ,
-                    }                    
+                    }
                     daraz_dicts.append(datas)
-                
+
                 # Click the "next page" button to go to the next page.
                 try:
                     await page.wait_for_selector(self.yaml_me['next_page_button'], timeout = 10000)
                     await next_page.click()
-                except PlaywrightTimeoutError: 
+                except PlaywrightTimeoutError:
                     # If the "next page" button cannot be found, there are no more pages to scrape.
-                    # Print a message indicating the error and break out of the loop.               
+                    # Print a message indicating the error and break out of the loop.
                     print(f"Content loading error at page number {count}. There are no result found beyond this page. Scraper is exiting......")
-                    break                         
-            
+                    break
+
             # Close the browser.
-            await browser.close() 
+            await browser.close()
 
         # Now exporting to excel database:
         df = pd.DataFrame(data = daraz_dicts)
-        df.to_excel(f"""Daraz database//{self.category} database-{country}.xlsx""", index = False)      
-        print(f"{self.category} saved.")       
-            
- 
+        df.to_excel(f"""Daraz database//{self.category} database-{country}.xlsx""", index = False)
+        print(f"{self.category} saved.")

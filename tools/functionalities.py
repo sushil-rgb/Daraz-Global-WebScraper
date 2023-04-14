@@ -11,22 +11,22 @@ class TryExcept:
 
     Methods:
     - text(element): Retrieves the inner text of an element or returns "N/A" if the element has no inner text.
-    - attribute(element, attr): Retrieves the value of 
+    - attribute(element, attr): Retrieves the value of
     """
-    async def text(self, element):        
+    async def text(self, element):
         try:
             elements = (await (await element).inner_text()).strip()
         except AttributeError:
-            elements = "N/A"        
+            elements = "N/A"
         return elements
 
-    async def attributes(self, element, attr):        
+    async def attributes(self, element, attr):
         try:
-            elements = await (await element).get_attribute(attr) 
+            elements = await (await element).get_attribute(attr)
         except AttributeError:
             elements = "N/A"
         return elements
-    
+
 
 def verifyDarazURL(url):
     """
@@ -38,6 +38,7 @@ def verifyDarazURL(url):
     Returns:
     - bool: True if the URL is not a Daraz website, False otherwise.
     """
+
     daraz_pattern = re.search("""^https://www.daraz.(com.np|lk|pk|com.bd)/+""", url)
     if daraz_pattern == None:
         return True
@@ -73,8 +74,8 @@ async def check_domain(url):
     - str: The name of the country the domain belongs to (Nepal, Sri Lanka, Bangladesh, or Pakistan).
 
     """
-    
-    pattern = re.search(r"(.np|.bd|.lk|.pk)", url) 
+
+    pattern = re.search(r"(.np|.bd|.lk|.pk)", url)
     domain_lists = {
         'np': 'Nepal',
         'lk': 'Sri Lanka',
@@ -86,7 +87,7 @@ async def check_domain(url):
     except AttributeError:
         country = None
     return domain_lists[country]
-                    
+
 
 def flat(d_lists):  
     """
@@ -97,7 +98,8 @@ def flat(d_lists):
 
     Returns:
     - list: A flattened version of the input list.
-    """  
+    """
+
     return list(itertools.chain(*d_lists))
 
 
@@ -111,6 +113,7 @@ def yamlMe(selectors):
     Returns:
     - dict: A dictionary containing CSS selectors and their corresponding data fields.
     """
+
     with open(f"scrapers\\{selectors}.yaml") as file:
         sel = yaml.load(file, Loader = yaml.SafeLoader)
         return sel
@@ -126,5 +129,4 @@ def userAgents():
    with open(f"{os.getcwd()}\\tools\\user-agents.txt") as f:
     agents = f.read().split("\n")
     return random.choice(agents)
-   
-   
+
