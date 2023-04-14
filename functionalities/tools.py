@@ -47,11 +47,24 @@ class AlertEmail:
     
 
 async def verifyDarazURL(url):
-    daraz_pattern = re.search("""^https://www.daraz.com.np/+""", url)
+    daraz_pattern = re.search("""^https://www.daraz.(com.np|lk|pk|com.bd)/+""", url)
     if daraz_pattern == None:
         return True
     else:
         return False
+
+
+async def check_domain(url):
+    pattern = re.search(r"(.np|.bd|.lk|.pk)", url) 
+    domain_lists = {
+        'np': 'Nepal',
+        'lk': 'Sri Lanka',
+        'bd': 'Bangladesh',
+        'pk': 'Pakistan',
+    }
+    country =pattern.group(1).replace(".", '')
+    return domain_lists[country]
+    
                 
 
 # For flattening the multi-dimensional lists:

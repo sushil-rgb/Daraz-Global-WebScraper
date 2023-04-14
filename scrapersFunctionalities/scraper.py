@@ -2,7 +2,7 @@ import re
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
-from functionalities.tools import userAgents, TryExcept, yamlMe
+from functionalities.tools import userAgents, TryExcept, yamlMe, check_domain
 from playwright.async_api import async_playwright, TimeoutError as PlaywrightTimeoutError
 
 
@@ -10,7 +10,8 @@ class Daraz:
     def __init__(self):        
         self.headers = {"User-Agent": userAgents()} 
         self.catchClause = TryExcept()
-        self.yaml_me = yamlMe('selectors')       
+        self.yaml_me = yamlMe('selectors') 
+        
 
     async def category_name(self, category_url):
         req = requests.get(category_url, headers=self.headers)
@@ -51,21 +52,24 @@ class Daraz:
             context = await browser.new_context(user_agent = userAgents())
             page = await context.new_page()
             
-            await page.goto(category_url)
+            await page.goto(category_url)            
 
-            print(f"Initiating the automation | Powered by Playwright.")
+            country = check_domain(category_url)
 
+            print(f"""Initiating the automation | Powered by Playwright.\n
+                      Daraz {country}
+                  """)
             self.category = await self.category_name(category_url)
             # Scraping the total number of pages
             last_page_number = await page.query_selector_all(self.yaml_me['last_page_number'])
             
-            last_one = int(await (last_page_number[len(last_page_number)-2]).get_attribute('title'))            
+            self.last_one = int(await (last_page_number[len(last_page_number)-2]).get_attribute('title'))            
             
-            print(f"Category: {self.category} | Number of pages: {last_one}")
+            print(f"Category: {self.category} | Number of pages: {self.last_one}")
             next_page = await page.query_selector(self.yaml_me['next_page_button'])            
 
             # Loop is for pagination: Added a 2 second interval between each click.
-            for count in range(1, last_one+1):                
+            for count in range(1, self.last_one+1):                
                 main_contents = await page.query_selector_all(self.yaml_me['category_main_contents'])
                 print(f"Scraping page | {count}")
                 for content in main_contents:
@@ -91,23 +95,7 @@ class Daraz:
 
         # Now exporting to excel database:
         df = pd.DataFrame(data = daraz_dicts)
-        df.to_excel(f"""Daraz database//{self.category}.xlsx""", index = False)      
+        df.to_excel(f"""Daraz database//{self.category} database-{country}.xlsx""", index = False)      
         print(f"{self.category} saved.")       
-
-
-# Below object split the main category url to the number of pages available in that category:
-class SplitDarazURL:
-    def __init__(self, split_this_url):
-        self.split_this_url = split_this_url
-    
-
-    def split(self, lastpages):
-        url_lists = []        
-        first_split = self.split_this_url.split("?")
-
-        for index in range(1, self.lastpages+1):
-            new_url = f"?page={str(index)}&".join(first_split)
-            url_lists.append(new_url)
-        
-        return url_lists
-      
+            
+ 
