@@ -163,9 +163,6 @@ class Daraz:
                 # Loop through the products on the current page and extract their data.
                 for content in main_contents:
                     product = await self.catchClause.text(content.query_selector(self.yaml_me['category_product_names']))
-                    rating = await self.catchClause.attributes(content.query_selector(self.yaml_me['category_rating']), 'src')
-                    print(rating)
-                    # return
                     print(f"Scraping product | {product}.")
                     await page.wait_for_timeout(timeout=0.03*1000)
                     datas = {
