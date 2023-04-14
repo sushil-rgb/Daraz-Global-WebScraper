@@ -1,5 +1,6 @@
 # Daraz Scraper
-This is a Python application that scrapes product details from <a href = "https://www.daraz.com.np/">Daraz</a> - a popular online marketplace in Nepal. The application uses asyncio for asynchronous programming and makes use of the Requests-HTML library for HTML parsing and beautifulsoup4 for scraping.
+This is a Python application that scrapes product details from <a href = "https://www.daraz.com.np/">Daraz</a> - a popular online marketplace in South Asia. The application uses asyncio for asynchronous programming and makes use of the Requests-HTML library for HTML parsing and beautifulsoup4 for scraping.
+**This scraper is designed to scrape product details from the online marketplaces of Sri Lanka, Pakistan, Bangladesh, and Nepal**
 
 # Installation
 1. Clone the repository to your local machine:
