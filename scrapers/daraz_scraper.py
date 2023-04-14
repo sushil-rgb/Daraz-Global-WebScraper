@@ -1,9 +1,8 @@
-import re
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
-from tools.functionalities import userAgents, TryExcept, yamlMe, check_domain
 from playwright.async_api import async_playwright, TimeoutError as PlaywrightTimeoutError
+from tools.functionalities import userAgents, TryExcept, yamlMe, check_domain, random_interval
 
 
 class Daraz:    
@@ -158,7 +157,7 @@ class Daraz:
                 print(f"\nScraping page | {count}")     
 
                 # Wait for a short time before scraping the next page.
-                await page.wait_for_timeout(timeout=2*1000)            
+                await page.wait_for_timeout(timeout=random_interval(5)*1000)            
 
                 # Loop through the products on the current page and extract their data.
                 for content in main_contents:

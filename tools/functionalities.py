@@ -45,6 +45,23 @@ def verifyDarazURL(url):
         return False
 
 
+def random_interval(value):
+    """
+    This function takes an integer value as an argument and returns a random integer between 2 and the length
+    of a list containing values from 0 up to the given value.
+
+    Args:
+    - value (int): an integer value representing the upper limit of the range
+
+    Returns:
+    - rand_time (int): a random integer between 2 and the length of the range list plus 1
+    """
+
+    ranges = [time for time in range(value+1)]
+    rand_time = random.randint(2, len(ranges))
+    return rand_time
+
+
 async def check_domain(url):
     """
     Check the domain of a URL and return the country it belongs to.
