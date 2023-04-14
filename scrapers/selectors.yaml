@@ -6,6 +6,7 @@ category_product_image: "div.mainPic--ehOdr a img.image--WOyuZ"
 category_discount_price: "div.price--NVB62 span.currency--GVKjl"
 category_discount_rate: "span.discount--HADrg"
 category_og_price: "div.priceExtra--ocAYk span.origPrice--AJxRs del.currency--GVKjl"
+
 last_page_number: "li[tabindex='0']"
 next_page_button: "li[title='Next Page']"
 

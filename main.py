@@ -10,8 +10,8 @@ if __name__ == "__main__":
     if verifyDarazURL(url):
         print("Invalid link. Please enter a valid Daraz product category link.")
     else:        
-        # results = await Daraz().product_details(url)
-        print(asyncio.run(Daraz().scrapeMe(url)))
+        results = Daraz().scrape_datas(url)
+        asyncio.run(results)
        
     total_time = round((time.time() - start_time), 2)
     time_in_secs = round(total_time, 2)

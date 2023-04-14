@@ -101,7 +101,7 @@ class Daraz:
 
             return datas
     
-    async def scrapeMe(self, category_url):        
+    async def scrape_datas(self, category_url):        
         """
     This function scrapes product data from a category page on Daraz website, using Playwright library for web automation.
     The scraped data is stored in a Pandas DataFrame and exported as an Excel file.
@@ -152,17 +152,22 @@ class Daraz:
             # Loop through the page using the "next page button".
             for count in range(1, self.last_page_number+1):         
                 # Get the main content section of the page.       
-                main_contents = await page.query_selector_all(self.yaml_me['category_main_contents'])                
+                main_contents = await page.query_selector_all(self.yaml_me['category_main_contents'])                  
 
                 # Print a message indicating the current page being scraped.
-                print(f"Scraping page | {count}")
-                await page.wait_for_timeout(timeout=2*1000)
+                print(f"\nScraping page | {count}")     
+
+                # Wait for a short time before scraping the next page.
+                await page.wait_for_timeout(timeout=2*1000)            
 
                 # Loop through the products on the current page and extract their data.
                 for content in main_contents:
                     product = await self.catchClause.text(content.query_selector(self.yaml_me['category_product_names']))
+                    rating = await self.catchClause.attributes(content.query_selector(self.yaml_me['category_rating']), 'src')
+                    print(rating)
+                    # return
                     print(f"Scraping product | {product}.")
-                    await page.wait_for_timeout(timeout=0.2*1000)
+                    await page.wait_for_timeout(timeout=0.03*1000)
                     datas = {
                         "Name": product,
                         "Original price": await self.catchClause.text(content.query_selector(self.yaml_me['category_discount_price'])),
@@ -181,10 +186,7 @@ class Daraz:
                     # If the "next page" button cannot be found, there are no more pages to scrape.
                     # Print a message indicating the error and break out of the loop.               
                     print(f"Content loading error at page number {count}. There are no result found beyond this page. Scraper is exiting......")
-                    break
-                
-                # Wait for a short time before scraping the next page.
-                await page.wait_for_timeout(timeout=2*1000)                                    
+                    break                         
             
             # Close the browser.
             await browser.close() 

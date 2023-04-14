@@ -69,8 +69,7 @@ async def check_domain(url):
     except AttributeError:
         country = None
     return domain_lists[country]
-    
-                
+                    
 
 def flat(d_lists):  
     """
