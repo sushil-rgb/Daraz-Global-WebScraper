@@ -28,6 +28,23 @@ class TryExcept:
         return elements
 
 
+def create_path(dir_name):
+    """
+    Creates a directory with the specified name if i doesn't already exist.
+
+    Args:
+        -dir_name: A string representing the name of the direcory to create.
+
+    Return:
+        -None
+    """
+    path_dir = os.path.join(os.getcwd(), dir_name)
+    if os.path.exists(path_dir):
+        pass
+    else:
+        os.mkdir(path_dir)
+
+
 def verifyDarazURL(url):
     """
     Check if the URL belongs to a Daraz website.

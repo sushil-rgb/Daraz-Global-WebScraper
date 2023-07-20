@@ -2,7 +2,7 @@ import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 from playwright.async_api import async_playwright, TimeoutError as PlaywrightTimeoutError
-from tools.functionalities import userAgents, TryExcept, yamlMe, check_domain, random_interval
+from tools.functionalities import userAgents, TryExcept, yamlMe, check_domain, random_interval, create_path
 
 
 class Daraz:
@@ -189,5 +189,7 @@ class Daraz:
 
         # Now exporting to excel database:
         df = pd.DataFrame(data = daraz_dicts)
+        create_path("Daraz database")
         df.to_excel(f"""Daraz database//{self.category} database-{country}.xlsx""", index = False)
         print(f"{self.category} saved.")
+
