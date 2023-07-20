@@ -146,8 +146,8 @@ class Daraz:
                     await page.wait_for_timeout(timeout=0.03*1000)
                     datas = {
                         "Name": product,
-                        "Original price": await self.catchClause.text(content.query_selector(self.yaml_me['category_discount_price'])),
-                        "Discount price": await self.catchClause.text(content.query_selector(self.yaml_me['category_og_price'])),
+                        "Original price": await self.catchClause.text(content.query_selector(self.yaml_me['category_og_price'])),
+                        "Discount price": await self.catchClause.text(content.query_selector(self.yaml_me['category_discount_price'])),
                         "Discount rate": (await self.catchClause.text(content.query_selector(self.yaml_me['category_discount_rate']))).replace("-", ""),
                         "Hyperlink": f"""https:{await self.catchClause.attributes(content.query_selector(self.yaml_me['category_product_links']), 'href')}""",
                         "Image": await self.catchClause.attributes(content.query_selector(self.yaml_me['category_product_image']), 'src') ,
