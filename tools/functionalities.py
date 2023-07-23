@@ -1,8 +1,8 @@
-import re
-import os
-import yaml
-import random
 import itertools
+import random
+import yaml
+import os
+import re
 
 
 class TryExcept:
@@ -92,12 +92,13 @@ async def check_domain(url):
 
     """
 
-    pattern = re.search(r"(.np|.bd|.lk|.pk)", url)
+    pattern = re.search(r"(.np|.bd|.lk|.pk|.mm)", url)
     domain_lists = {
         'np': 'Nepal',
         'lk': 'Sri Lanka',
         'bd': 'Bangladesh',
         'pk': 'Pakistan',
+        'mm': 'Myanmar',
     }
     try:
         country =pattern.group(1).replace(".", '')
