@@ -38,6 +38,10 @@ The Daraz Scraper now includes the option to export the scraped data to a MongoD
 
        print(asyncio.run(main()))
    ```
+   Run the **`main.py`** file:
+```python
+python main.py
+```
 
 4. Set the `url` variable to the desired Daraz product category URL that you want to scrape.<br>
 
@@ -88,23 +92,6 @@ Enter a Daraz product URL:> https://www.daraz.com.np/products/sony-playstation-5
 Took 11.95 seconds. | 0.2 minutes.
 ```
 
-## scrapeMe() method:
-```python
-import asyncio
-from daraz_scraper import Daraz
-
-async def main():
-    url = "https://www.daraz.pk/womens-sandals/?page=1"
-    daraz = Daraz()
-    await daraz.scrapeMe(url)
-    print("Scraping finished!")
-
-if __name__ == "__main__":
-    asyncio.run(main())
-```
-Run the **`main.py`** file:
-```python
-python main.py
 ```
 In this example, we create a Daraz object, and call its scrapeMe() method with a URL for a Daraz category page for women's sandals. The scrapeMe() method will scrape all the product information from all pages of the category and save it to an Excel file. Once the scraping is finished, the program will print "Scraping finished!" to the console.
 

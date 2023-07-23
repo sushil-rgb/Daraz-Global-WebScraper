@@ -17,7 +17,7 @@ if __name__ == "__main__":
             print("Invalid link. Please enter a valid Daraz product category link.")
         else:
             daraz = Daraz(url)
-            mongo_db = False  # Set this to False if you want to export to an Excel sheet
+            mongo_db = True  # Set this to False if you want to export to an Excel sheet
             if mongo_db:
                 await daraz.export_to_mongo()
             else:
