@@ -39,9 +39,7 @@ def create_path(dir_name):
         -None
     """
     path_dir = os.path.join(os.getcwd(), dir_name)
-    if os.path.exists(path_dir):
-        pass
-    else:
+    if not os.path.exists(path_dir):
         os.mkdir(path_dir)
 
 
@@ -57,10 +55,7 @@ def verifyDarazURL(url):
     """
 
     daraz_pattern = re.search("""^https://www.daraz.(com.np|lk|pk|com.bd)/+""", url)
-    if daraz_pattern == None:
-        return True
-    else:
-        return False
+    return daraz_pattern is None
 
 
 def random_interval(value):
@@ -75,9 +70,8 @@ def random_interval(value):
     - rand_time (int): a random integer between 2 and the length of the range list plus 1
     """
 
-    ranges = [time for time in range(value+1)]
-    rand_time = random.randint(2, len(ranges))
-    return rand_time
+    ranges = list(range(value+1))
+    return random.randint(2, len(ranges))
 
 
 async def check_domain(url):
@@ -133,8 +127,7 @@ def yamlMe(selectors):
     """
 
     with open(f"scrapers\\{selectors}.yaml") as file:
-        sel = yaml.load(file, Loader = yaml.SafeLoader)
-        return sel
+        return yaml.load(file, Loader = yaml.SafeLoader)
 
 
 def userAgents():
